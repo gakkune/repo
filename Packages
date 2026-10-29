@@ -1,1 +1,9 @@
-
+Package: com.gakkune.abmod
+Name: ABMod
+Version: 0.2.0
+Architecture: iphoneos-arm64
+Description: It lets you assign multiple functions to an action button.
+Maintainer: gakkune
+Author: gakkune
+Section: Tweaks
+Filename: tweaks/com.gakkune.abmod_0.2.0_iphoneos-arm64.deb
