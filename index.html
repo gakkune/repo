@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color"=#fff5f9>
+  <title>gakkune</title>
+  <style>
+    :root {
+      --text: #3d2b33;
+      --muted: #8d7480;
+      --line: rgba(180, 120, 150, .22);
+      --panel: rgba(255, 255, 255, .72);
+      --pink: #e86a9c;
+      --pink-soft: #f7b8cd;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 214, 228, .85), transparent 42%),
+        radial-gradient(circle at 85% 15%, rgba(232, 200, 255, .7), transparent 45%),
+        radial-gradient(circle at 75% 85%, rgba(255, 190, 210, .8), transparent 48%),
+        radial-gradient(circle at 20% 80%, rgba(240, 215, 250, .7), transparent 45%),
+        linear-gradient(120deg, #fff8fb 0%, #fdeef4 40%, #f6e9f5 100%);
+      background-attachment: fixed;
+      animation: shimmer 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes shimmer {
+      0% { filter: hue-rotate(0deg); background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%; }
+      50% { filter: hue-rotate(14deg); background-position: 12% 8%, 88% 12%, 92% 88%, 8% 92%, 50% 50%; }
+      100% { filter: hue-rotate(-10deg); background-position: 8% 12%, 92% 8%, 88% 92%, 12% 88%, 100% 100%; }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .5;
+      background-image:
+        repeating-linear-gradient(115deg, rgba(255,255,255,.55) 0 2px, transparent 2px 9px),
+        repeating-linear-gradient(65deg, rgba(232, 106, 156, .06) 0 3px, transparent 3px 11px);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .page { width: min(640px, calc(100% - 32px)); margin: 0 auto; padding: 76px 0 42px; }
+
+    .profile { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, .85);
+      border-radius: 50%;
+      box-shadow: 0 10px 30px rgba(210, 110, 150, .3);
+    }
+    .profile h1 { margin: 16px 0 0; font-size: 21px; letter-spacing: -.03em; font-weight: 600; }
+
+    .links { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+    .link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255, 255, 255, .65);
+      font-size: 12px;
+      transition: background .18s, border-color .18s;
+    }
+    .link:hover { border-color: var(--pink); background: #fff; }
+    .link svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .source {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 52px 0 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .source h2 { margin: 0; font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+    .source button { padding: 0; border: 0; color: var(--muted); background: none; cursor: pointer; font-size: 12px; }
+    .source button:hover { color: var(--pink); }
+
+    .packages { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); backdrop-filter: blur(14px); box-shadow: 0 12px 34px rgba(190, 110, 150, .14); }
+    .package { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 17px 18px; border-bottom: 1px solid var(--line); }
+    .package:last-child { border-bottom: 0; }
+    .package h3 { margin: 0; font-size: 15px; font-weight: 550; letter-spacing: -.01em; }
+    .package .description { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+
+    .install {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 78px;
+      padding: 7px 12px;
+      border: 1px solid rgba(232, 106, 156, .45);
+      border-radius: 8px;
+      color: #a13d6e;
+      background: rgba(255, 255, 255, .8);
+      cursor: pointer;
+      font-size: 12px;
+      transition: background .18s, border-color .18s;
+    }
+    .install:hover { border-color: var(--pink); background: #ffeef4; }
+
+    .empty, .loading, .error { padding: 28px 18px; color: var(--muted); text-align: center; font-size: 13px; }
+    .error { color: #b04070; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 330px;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(190, 110, 150, .22);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: .2s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 560px) {
+      .page { padding-top: 44px; }
+      .package { grid-template-columns: 1fr; gap: 12px; }
+      .install { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="profile">
+      <img class="avatar" src="https://raw.githubusercontent.com/gakkune/repo/main/CydiaIcon.png" alt="gakkune avatar">
+      <h1>gakkune</h1>
+      <nav class="links" aria-label="Profile links">
+        <a class="link" href="https://github.com/gakkune" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.3c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.7-1.3-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A12 12 0 0 0 12 .7Z"/></svg>
+          GitHub
+        </a>
+        <a class="link" href="https://t.me/gakkunebreak" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.9.9l-5.2-3.9-2.5 2.4c-.3.3-.6.6-1.2.6l.4-5.4 9.8-8.9c.4-.4-.1-.6-.7-.2L6.2 13.9 1.1 12.3c-1.1-.4-1.2-1.1.2-1.7l19.3-7.5c1-.4 1.8.2 1.3 1.2Z"/></svg>
+          Telegram
+        </a>
+      </nav>
+    </header>
+
+    <section aria-labelledby="packages-title">
+      <div class="source"><h2 id="packages-title">Packages</h2><button id="refresh" type="button">Refresh</button></div>
+      <div class="packages" id="packages"><div class="loading">Loading packages…</div></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const repo = 'https://raw.githubusercontent.com/gakkune/repo/main/';
+    const packagesUrl = `${repo}Packages`;
+    const list = document.getElementById('packages');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    function notify(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    function parsePackages(text) {
+      return text.trim().split(/\n\s*\n/).filter(Boolean).map(block => {
+        const item = {};
+        block.split('\n').forEach(line => {
+          const separator = line.indexOf(':');
+          if (separator > 0) item[line.slice(0, separator).trim().toLowerCase()] = line.slice(separator + 1).trim();
+        });
+        return item;
+      });
+    }
+
+    function packageRow(item) {
+      const name = item.name || 'Unnamed package';
+      const packageId = item.package || '';
+      const file = item.filename ? `${repo}${item.filename}` : '';
+      const row = document.createElement('article');
+      row.className = 'package';
+      row.innerHTML = `<div><h3></h3><p class="description"></p></div><button class="install" type="button">Add to Sileo</button>`;
+      row.querySelector('h3').textContent = name;
+      row.querySelector('.description').textContent = item.description || 'No description provided.';
+      row.querySelector('.install').addEventListener('click', () => {
+        if (!file) return notify('No package file is listed for this release.');
+        window.location.href = `sileo://package/${encodeURIComponent(packageId || name)}`;
+      });
+      return row;
+    }
+
+    async function loadPackages() {
+      list.innerHTML = '<div class="loading">Loading packages…</div>';
+      try {
+        const response = await fetch(`${packagesUrl}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const items = parsePackages(await response.text());
+        list.replaceChildren();
+        if (!items.length) { list.innerHTML = '<div class="empty">No packages published yet.</div>'; return; }
+        items.forEach(item => list.appendChild(packageRow(item)));
+      } catch (error) {
+        list.innerHTML = '<div class="error">Could not load packages from GitHub.<br>Try refreshing the page.</div>';
+        console.error(error);
+      }
+    }
+
+    document.getElementById('refresh').addEventListener('click', loadPackages);
+    loadPackages();
+  </script>
+</body>
+</html>
