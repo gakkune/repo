@@ -67,7 +67,22 @@
     }
     .profile h1 { margin: 16px 0 0; font-size: 21px; letter-spacing: -.03em; font-weight: 600; }
 
-    .links { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+    .repo-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 9px 16px;
+      border: 1px solid rgba(232, 106, 156, .55);
+      border-radius: 8px;
+      color: #a13d6e;
+      background: rgba(255, 255, 255, .78);
+      cursor: pointer;
+      font-size: 12px;
+      transition: background .18s, border-color .18s, transform .18s;
+    }
+    .repo-button:hover { border-color: var(--pink); background: #fff; transform: translateY(-1px); }
+    .links { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
     .link {
       display: inline-flex;
       align-items: center;
@@ -149,8 +164,9 @@
 <body>
   <main class="page">
     <header class="profile">
-      <img class="avatar" src="https://raw.githubusercontent.com/gakkune/repo/main/CydiaIcon.png" alt="gakkune avatar">
+      <img class="avatar" src="https://gakkune.github.io/repo/CydiaIcon.png" alt="gakkune avatar">
       <h1>gakkune</h1>
+      <button class="repo-button" id="addRepo" type="button">Add repo to Sileo</button>
       <nav class="links" aria-label="Profile links">
         <a class="link" href="https://github.com/gakkune" target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.3c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.7-1.3-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A12 12 0 0 0 12 .7Z"/></svg>
@@ -171,7 +187,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
-    const repo = 'https://raw.githubusercontent.com/gakkune/repo/main/';
+    const repo = 'https://gakkune.github.io/repo/';
     const packagesUrl = `${repo}Packages`;
     const list = document.getElementById('packages');
     const toast = document.getElementById('toast');
@@ -226,6 +242,9 @@
       }
     }
 
+    document.getElementById('addRepo').addEventListener('click', () => {
+      window.location.href = `sileo://source/${encodeURIComponent(repo)}`;
+    });
     document.getElementById('refresh').addEventListener('click', loadPackages);
     loadPackages();
   </script>
