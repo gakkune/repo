@@ -7,6 +7,7 @@ Maintainer: gakkune
 Author: gakkune
 Section: Tweaks
 Filename: tweaks/com.gakkune.abmod_0.2.0_iphoneos-arm64.deb
+Size: 45572
 
 Package: com.gakkune.showdi
 Name: ShowDI
@@ -17,3 +18,4 @@ Maintainer: gakkune
 Author: gakkune
 Section: Tweaks
 Filename: tweaks/com.gakkune.showdi_0.1.0_iphoneos-arm64.deb
+Size: 4322
