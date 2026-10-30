@@ -7,3 +7,13 @@ Maintainer: gakkune
 Author: gakkune
 Section: Tweaks
 Filename: tweaks/com.gakkune.abmod_0.2.0_iphoneos-arm64.deb
+
+Package: com.gakkune.showdi
+Name: ShowDI
+Version: 0.1.0
+Architecture: iphoneos-arm64
+Description: Show the inactive Dynamic Island in screenshots.
+Maintainer: gakkune
+Author: gakkune
+Section: Tweaks
+Filename: tweaks/com.gakkune.showdi_0.1.0_iphoneos-arm64.deb
